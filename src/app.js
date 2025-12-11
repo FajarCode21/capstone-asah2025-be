@@ -18,7 +18,7 @@ const swaggerDocument = JSON.parse(
 app.use(express.json({ limit: '5mb' }));
 app.use(
   cors({
-    origin: 'https://capstone-asah2025-fe.vercel.app',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
