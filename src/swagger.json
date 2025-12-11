@@ -1,0 +1,397 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Capstone Asah Aura API Documentation",
+    "version": "1.0.0",
+    "description": "API documentation for the Capstone Asah Aura project."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Dashboard"
+    },
+    {
+      "name": "Chatbot"
+    },
+    {
+      "name": "Maintenance Tickets"
+    }
+  ],
+  "paths": {
+    "/api/dashboard/summary": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Ambil ringkasan dashboard",
+        "description": "Mengambil data ringkasan dashboard seperti total aset, normal, warning, dan critical.",
+        "responses": {
+          "200": {
+            "description": "Data ringkasan dashboard berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": { "type": "string" },
+                          "value": { "type": "integer" },
+                          "rate": { "type": "number" }
+                        }
+                      },
+                      "example": [
+                        { "title": "Total Aset", "value": 400, "rate": 100 },
+                        { "title": "Normal", "value": 318, "rate": 79.5 },
+                        { "title": "Warning", "value": 8, "rate": 2 },
+                        { "title": "Critical", "value": 74, "rate": 18.5 }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/trend?days={days}": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Ambil data tren dashboard",
+        "description": "Mengambil data tren untuk grafik di dashboard.",
+        "responses": {
+          "200": {
+            "description": "Data tren dashboard berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": { "type": "string" },
+                          "machineNormal": { "type": "integer" },
+                          "machineWarning": { "type": "integer" },
+                          "machineCritical": { "type": "integer" }
+                        }
+                      },
+                      "example": [
+                        { "date": "2025-12-07T00:00:00+07:00", "machineNormal": 340, "machineWarning": 25, "machineCritical": 45 },
+                        { "date": "2025-12-06T00:00:00+07:00", "machineNormal": 300, "machineWarning": 13, "machineCritical": 30 },
+                        { "date": "2025-12-05T00:00:00+07:00", "machineNormal": 280, "machineWarning": 20, "machineCritical": 50 },
+                        { "date": "2025-12-04T00:00:00+07:00", "machineNormal": 250, "machineWarning": 15, "machineCritical": 35 },
+                        { "date": "2025-12-03T00:00:00+07:00", "machineNormal": 220, "machineWarning": 10, "machineCritical": 20 }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/stats": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Ambil data statistik dashboard",
+        "description": "Mengambil data statistik untuk grafik di dashboard.",
+        "responses": {
+          "200": {
+            "description": "Data statistik dashboard berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "name": { "type": "string" },
+                          "status": { "type": "string" },
+                          "rotational_speed": { "type": "number", "format": "float" },
+                          "process_temperature": { "type": "number", "format": "float" },
+                          "air_temperature": { "type": "number", "format": "float" },
+                          "rul_hours": { "type": "number", "format": "float" },
+                          "rec_id": { "type": "integer" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "id": 1,
+                          "name": "Generator 1",
+                          "status": "NORMAL",
+                          "rotational_speed": 1423,
+                          "process_temperature": 312.1,
+                          "air_temperature": 298.3,
+                          "rul_hours": 3831.2,
+                          "rec_id": 4962
+                        },
+                        {
+                          "id": 2,
+                          "name": "Pump 2",
+                          "status": "NORMAL",
+                          "rotational_speed": 1568,
+                          "process_temperature": 305.7,
+                          "air_temperature": 298.1,
+                          "rul_hours": 7243.8,
+                          "rec_id": 2351
+                        },
+                        {
+                          "id": 3,
+                          "name": "Compressor 3",
+                          "status": "NORMAL",
+                          "rotational_speed": 1590,
+                          "process_temperature": 307.9,
+                          "air_temperature": 299.6,
+                          "rul_hours": 8001.8,
+                          "rec_id": 4154
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chatbot": {
+      "post": {
+        "tags": ["Chatbot"],
+        "summary": "Kirim pesan ke chatbot",
+        "description": "Mengirim pesan ke chatbot dan menerima respons.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "example": "Mesin mana yang berisiko minggu ini?"
+                  }
+                },
+                "required": ["message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Respons dari chatbot berhasil diterima",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "answer": {
+                      "type": "string",
+                      "example": "Berikut adalah jawaban:\n\n- Status Mesin: Mesin Generator 11, Compressor 23, Compressor 13, Motor 26, dan Conveyor 29 berstatus CRITICAL.\n- Analisis: Mesin-mesin tersebut berisiko tinggi karena memiliki status CRITICAL dan RUL yang rendah, serta prioritas HIGH/Urgent.\n- Risiko: Mesin-mesin tersebut berisiko kegagalan operasional, kehilangan produksi, dan kerusakan mesin yang lebih parah jika tidak dilakukan perawatan segera.\n- Rekomendasi: Lakukan perawatan segera pada Mesin Generator 11, Compressor 23, Compressor 13, Motor 26, dan Conveyor 29 untuk mencegah kegagalan operasional dan kerusakan mesin."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenance-tickets?status={status}": {
+      "get": {
+        "tags": ["Maintenance Tickets"],
+        "summary": "Ambil daftar tiket pemeliharaan",
+        "description": "Mengambil daftar tiket pemeliharaan yang ada.",
+        "responses": {
+          "200": {
+            "description": "Daftar tiket pemeliharaan berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer", "example": 2 },
+                          "name": { "type": "string", "example": "Pump 2" },
+                          "status": { "type": "string", "example": "CRITICAL" },
+                          "priority": { "type": "string", "example": "HIGH" },
+                          "ticket_id": { "type": "integer", "example": 62 },
+                          "ticket_status": { "type": "string", "example": "OPEN" },
+                          "ticket_created_at": { "type": "string", "format": "date-time", "example": "2025-12-07T06:31:29.963Z" }
+                        }
+                      },
+                      "example": [
+                        {
+                          "id": 2,
+                          "name": "Pump 2",
+                          "status": "CRITICAL",
+                          "priority": "HIGH",
+                          "ticket_id": 62,
+                          "ticket_status": "OPEN",
+                          "ticket_created_at": "2025-12-07T06:31:29.963Z"
+                        },
+                        {
+                          "id": 3,
+                          "name": "Compressor 3",
+                          "status": "CRITICAL",
+                          "priority": "URGENT",
+                          "ticket_id": 178,
+                          "ticket_status": "OPEN",
+                          "ticket_created_at": "2025-12-07T06:31:29.963Z"
+                        },
+                        {
+                          "id": 4,
+                          "name": "Fan 4",
+                          "status": "CRITICAL",
+                          "priority": "HIGH",
+                          "ticket_id": 386,
+                          "ticket_status": "OPEN",
+                          "ticket_created_at": "2025-12-07T06:31:29.963Z"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/maintenance-tickets/{ticket_id}": {
+      "get": {
+        "tags": ["Maintenance Tickets"],
+        "summary": "Ambil detail tiket pemeliharaan",
+        "description": "Mengambil detail dari tiket pemeliharaan tertentu.",
+        "responses": {
+          "200": {
+            "description": "Detail tiket pemeliharaan berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer", "example": 228 },
+                        "name": { "type": "string", "example": "Valve 228" },
+                        "status": { "type": "string", "example": "CRITICAL" },
+                        "priority": { "type": "string", "example": "HIGH" },
+                        "action": { "type": "string", "example": "Schedule maintenance within 1-2 weeks" },
+                        "type": { "type": "string", "example": "Power Failure" },
+                        "confidence": { "type": "number", "format": "float", "example": 0.999 },
+                        "heat_dissipation_failure": { "type": "number", "format": "float", "example": 0 },
+                        "random_failures": { "type": "number", "format": "float", "example": 0.001 },
+                        "overstrain_failure": { "type": "number", "format": "float", "example": 0 },
+                        "power_failure": { "type": "number", "format": "float", "example": 0.999 },
+                        "tool_wear_failure": { "type": "number", "format": "float", "example": 0 },
+                        "ticket_id": { "type": "integer", "example": 1 },
+                        "ticket_status": { "type": "string", "example": "OPEN" },
+                        "ticket_created_at": { "type": "string", "format": "date-time", "example": "2025-12-07T06:31:29.963Z" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Maintenance Tickets"],
+        "summary": "Perbarui status tiket pemeliharaan",
+        "description": "Memperbarui status dari tiket pemeliharaan tertentu.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "OPEN/IN_PROGRESS/RESOLVED/CLOSED"
+                  }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Maintenance ticket berhasil diupdate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "message": { "type": "string", "example": "Ticket status updated successfully" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Maintenance Tickets"],
+        "summary": "Hapus tiket pemeliharaan yang sudah selesai",
+        "description": "Menghapus tiket pemeliharaan yang sudah selesai atau ditutup.",
+        "responses": {
+          "200": {
+            "description": "Tiket pemeliharaan berhasil dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "message": { "type": "string", "example": "Maintenance ticket berhasil dihapus" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

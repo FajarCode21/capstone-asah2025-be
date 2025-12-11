@@ -1,0 +1,33 @@
+{
+  "name": "be",
+  "version": "1.0.0",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "nodemon --no-deprecation ./src/app.js",
+    "migrate": "node-pg-migrate",
+    "seed": "node ./seeds/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@huggingface/inference": "^2.8.1",
+    "@langchain/groq": "^1.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "joi": "^18.0.1",
+    "langchain": "^1.1.2",
+    "node-pg-migrate": "^8.0.3",
+    "pg": "^8.16.3",
+    "python-shell": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "type": "module"
+}
