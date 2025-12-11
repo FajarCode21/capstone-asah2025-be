@@ -36,6 +36,7 @@ app.all(/(.*)/, (req, res, next) => {
 
 app.use(errorHandler);
 
+console.log('Starting server...');
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
