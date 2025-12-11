@@ -31,17 +31,17 @@ class DashboardService {
         {
           title: 'Normal',
           value: machineNormal.length,
-          rate: (machineNormal.length / totalMachines) * 100,
+          rate: (machineNormal.length / totalMachines) * 100 || 0,
         },
         {
           title: 'Warning',
           value: machineWarning.length,
-          rate: (machineWarning.length / totalMachines) * 100,
+          rate: (machineWarning.length / totalMachines) * 100 || 0,
         },
         {
           title: 'Critical',
           value: machineCritical.length,
-          rate: (machineCritical.length / totalMachines) * 100,
+          rate: (machineCritical.length / totalMachines) * 100 || 0,
         },
       ];
     } catch (error) {
