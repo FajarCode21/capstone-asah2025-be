@@ -11,7 +11,6 @@ import Routes from './routes/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || 'localhost';
 const swaggerDocument = JSON.parse(
   fs.readFileSync('./src/swagger.json', 'utf-8')
 );
@@ -19,7 +18,7 @@ const swaggerDocument = JSON.parse(
 app.use(express.json({ limit: '5mb' }));
 app.use(
   cors({
-    origin: 'https://capstone-asah2025-fe.vercel.app/',
+    origin: 'https://capstone-asah2025-fe.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -37,6 +36,6 @@ app.all(/(.*)/, (req, res, next) => {
 app.use(errorHandler);
 
 console.log('Starting server...');
-app.listen(PORT, HOST, () => {
-  console.log(`Server is running on http://${HOST}:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port:${PORT}`);
 });
