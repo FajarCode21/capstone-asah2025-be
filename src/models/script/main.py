@@ -4,13 +4,53 @@ import numpy as np
 import joblib
 from preprocessing_pipeline import PreprocessingPipeline  
 import os
+import traceback
+
+# Debug: Print info
+print("=" * 60, file=sys.stderr)
+print("SCRIPT DEBUG INFO", file=sys.stderr)
+print("=" * 60, file=sys.stderr)
+print(f"Script file: {os.path.abspath(__file__)}", file=sys.stderr)
+print(f"Working dir: {os.getcwd()}", file=sys.stderr)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+print(f"BASE_DIR: {BASE_DIR}", file=sys.stderr)
+
+# Debug: Check what's in BASE_DIR parent
+parent_dir = os.path.dirname(BASE_DIR)
+print(f"Parent dir: {parent_dir}", file=sys.stderr)
+if os.path.exists(parent_dir):
+    print(f"Contents: {os.listdir(parent_dir)}", file=sys.stderr)
+
 PIPELINE_PATH = os.path.join(BASE_DIR, '../model/preprocessing_pipeline.pkl')
 SCALER_PATH = os.path.join(BASE_DIR, '../model/scaler.pkl')
 RUL_MODEL_PATH = os.path.join(BASE_DIR, '../model/rul_model.pkl')
 FAILURE_MODEL_PATH = os.path.join(BASE_DIR, '../model/failure_model.pkl')
 LABEL_ENCODER_PATH = os.path.join(BASE_DIR, '../model/label_encoder.pkl')
+
+# Debug: Print all paths
+print("\nModel paths:", file=sys.stderr)
+print(f"PIPELINE: {PIPELINE_PATH}", file=sys.stderr)
+print(f"SCALER: {SCALER_PATH}", file=sys.stderr)
+print(f"RUL_MODEL: {RUL_MODEL_PATH}", file=sys.stderr)
+print(f"FAILURE: {FAILURE_MODEL_PATH}", file=sys.stderr)
+print(f"LABEL_ENCODER: {LABEL_ENCODER_PATH}", file=sys.stderr)
+
+# Debug: Check if model directory exists
+model_dir = os.path.join(BASE_DIR, '../model')
+print(f"\nModel dir: {model_dir}", file=sys.stderr)
+print(f"Exists: {os.path.exists(model_dir)}", file=sys.stderr)
+if os.path.exists(model_dir):
+    print(f"Contents: {os.listdir(model_dir)}", file=sys.stderr)
+else:
+    # Search for .pkl files
+    print("Searching for .pkl files...", file=sys.stderr)
+    for root, dirs, files in os.walk(BASE_DIR):
+        for file in files:
+            if file.endswith('.pkl'):
+                print(f"  Found: {os.path.join(root, file)}", file=sys.stderr)
+
+print("=" * 60, file=sys.stderr)
 
 
 # --------------------------------------
@@ -19,7 +59,23 @@ LABEL_ENCODER_PATH = os.path.join(BASE_DIR, '../model/label_encoder.pkl')
 def load_models():
     models = {}
     try:
-        print("Loading preprocessing pipeline...", file=sys.stderr)
+        # Check each file before loading
+        print("\nChecking files before loading:", file=sys.stderr)
+        for name, path in [
+            ('PIPELINE', PIPELINE_PATH),
+            ('SCALER', SCALER_PATH),
+            ('RUL_MODEL', RUL_MODEL_PATH),
+            ('FAILURE', FAILURE_MODEL_PATH),
+            ('LABEL_ENCODER', LABEL_ENCODER_PATH)
+        ]:
+            exists = os.path.exists(path)
+            if exists:
+                size = os.path.getsize(path)
+                print(f"  ✓ {name}: {size:,} bytes", file=sys.stderr)
+            else:
+                print(f"  ✗ {name}: NOT FOUND at {path}", file=sys.stderr)
+        
+        print("\nLoading preprocessing pipeline...", file=sys.stderr)
         models['pipeline'] = PreprocessingPipeline.load(PIPELINE_PATH)
         print("Pipeline loaded", file=sys.stderr)
 
@@ -42,7 +98,9 @@ def load_models():
         return models
 
     except Exception as e:
-        print(f"ERROR loading models: {str(e)}", file=sys.stderr)
+        print(f"\nERROR loading models: {str(e)}", file=sys.stderr)
+        print(f"Error type: {type(e).__name__}", file=sys.stderr)
+        print(f"\nFull traceback:\n{traceback.format_exc()}", file=sys.stderr)
         sys.exit(1)
 
 

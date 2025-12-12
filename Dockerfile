@@ -10,12 +10,22 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt gdown
 
 COPY package*.json ./
 RUN npm install
 
 COPY . .
 
-# Tidak perlu EXPOSE, Railway handle otomatis
+# Download SEMUA models dari Google Drive
+RUN mkdir -p src/models/model
+RUN gdown --id YOUR_PIPELINE_ID -O src/models/model/preprocessing_pipeline.pkl
+RUN gdown --id YOUR_SCALER_ID -O src/models/model/scaler.pkl
+RUN gdown --id YOUR_RUL_MODEL_ID -O src/models/model/rul_model.pkl
+RUN gdown --id YOUR_FAILURE_ID -O src/models/model/failure_model.pkl
+RUN gdown --id YOUR_LABEL_ENCODER_ID -O src/models/model/label_encoder.pkl
+
+# Verify downloads
+RUN echo "Downloaded models:" && ls -lh src/models/model/
+
 CMD ["npm", "start"]
