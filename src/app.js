@@ -33,7 +33,7 @@ app.all(/(.*)/, (req, res, next) => {
 
 app.use(errorHandler);
 
-console.log('Starting server...');
+console.log('Starting server....');
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port:${PORT}`);
 });
