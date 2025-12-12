@@ -1,5 +1,6 @@
 FROM python:3.11-slim
 
+# Install Node.js
 RUN apt-get update && apt-get install -y \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
@@ -9,23 +10,20 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt gdown
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Node dependencies
 COPY package*.json ./
 RUN npm install
 
+# Copy application code (Railway auto-download Git LFS files)
 COPY . .
 
-# Download SEMUA models dari Google Drive
-RUN mkdir -p src/models/model
-RUN gdown --id YOUR_PIPELINE_ID -O src/models/model/preprocessing_pipeline.pkl
-RUN gdown --id YOUR_SCALER_ID -O src/models/model/scaler.pkl
-RUN gdown --id YOUR_RUL_MODEL_ID -O src/models/model/rul_model.pkl
-RUN gdown --id YOUR_FAILURE_ID -O src/models/model/failure_model.pkl
-RUN gdown --id YOUR_LABEL_ENCODER_ID -O src/models/model/label_encoder.pkl
-
-# Verify downloads
-RUN echo "Downloaded models:" && ls -lh src/models/model/
+# Verify model files exist
+RUN echo "Checking for model files..."
+RUN ls -lh src/models/model/ || echo "Model directory not found"
+RUN du -sh src/models/model/*.pkl 2>/dev/null || echo "No .pkl files found"
 
 CMD ["npm", "start"]
