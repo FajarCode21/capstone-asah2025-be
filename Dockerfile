@@ -1,14 +1,24 @@
 FROM python:3.11-slim
 
-# Install Node.js
+# Install Git LFS and Node.js
 RUN apt-get update && apt-get install -y \
-    curl \
+    curl git git-lfs \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Initialize Git LFS
+RUN git lfs install
+
 WORKDIR /app
+
+# Copy .git directory first to enable LFS pull
+# Note: Railway might not include .git, so this is a workaround
+COPY . .
+
+# Try to pull LFS files if .git exists
+RUN if [ -d .git ]; then git lfs pull; else echo "No .git directory, LFS files should be included"; fi
 
 # Install Python dependencies
 COPY requirements.txt .
@@ -18,12 +28,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY package*.json ./
 RUN npm install
 
-# Copy application code (Railway auto-download Git LFS files)
-COPY . .
-
-# Verify model files exist
-RUN echo "Checking for model files..."
-RUN ls -lh src/models/model/ || echo "Model directory not found"
-RUN du -sh src/models/model/*.pkl 2>/dev/null || echo "No .pkl files found"
+# Verify model files (should be large now)
+RUN echo "Checking model file sizes..."
+RUN ls -lh src/models/model/*.pkl
+RUN du -h src/models/model/*.pkl
 
 CMD ["npm", "start"]
